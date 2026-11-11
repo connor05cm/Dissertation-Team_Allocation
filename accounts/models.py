@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 
 #user model for roles
@@ -17,10 +17,20 @@ class User(AbstractUser):
 class Course(models.Model):
     course_id = models.CharField(max_length=20, primary_key=True)
     title = models.CharField(max_length=255)
+    max_preferences = models.PositiveSmallIntegerField(
+        default=5, validators=[MinValueValidator(1)],
+    )
     coordinator = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
         related_name="coordinated_courses",
     )
+# max preferences at least 1
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(max_preferences__gte=1), name="course_max_preferences_at_least_1",
+            ),
+        ]
 
 #checks assigned coordinator is a coordinator
     def clean(self):
@@ -63,7 +73,7 @@ class Preference(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="received_preferences",
     )
     rank = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        validators=[MinValueValidator(1)],
     )
 
     class Meta:
@@ -76,9 +86,9 @@ class Preference(models.Model):
             models.UniqueConstraint(
                 fields=["course", "chooser", "rank"], name="unique_preference_rank",
             ),
-            #ranks between 1-5
+            #ranks start at 1
             models.CheckConstraint(
-                condition=models.Q(rank__gte=1, rank__lte=5), name="preference_rank_1_to_5",
+                condition=models.Q(rank__gte=1), name="preference_rank_at_least_1",
             ),
             #cant rank themself
             models.CheckConstraint(
@@ -90,6 +100,8 @@ class Preference(models.Model):
     def clean(self):
         super().clean()
         errors = {}
+        if self.course_id and self.rank is not None and self.rank > self.course.max_preferences:
+            errors["rank"] = f"Rank cannot exceed this course's maximum of {self.course.max_preferences}."
         if self.chooser_id and self.chooser_id == self.chosen_id:
             errors["chosen"] = "Students cannot rank themselves."
         for field in ("chooser", "chosen"):
