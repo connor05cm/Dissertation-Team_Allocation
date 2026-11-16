@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Group Allocation{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'accounts/styles.css' %}">
+</head>
+<body>
+    {% block logout_button %}
+        {% if user.is_authenticated %}
+            <header class="app-header">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit">Log out</button>
+                </form>
+            </header>
+        {% endif %}
+    {% endblock %}
+    {% block content %}{% endblock %}
+</body>
+</html>

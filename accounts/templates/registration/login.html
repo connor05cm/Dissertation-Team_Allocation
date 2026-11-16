@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Log in | Group Allocation{% endblock %}
+
+{#hide logout button#}
+{% block logout_button %}{% endblock %}
+
+{% block content %}
+    <main class="login-panel">
+    {#show user is signed in#}
+        {% if user.is_authenticated %}
+        <p>You’re signed in</p>
+    {% else %}
+        <h1>Log in</h1>
+        <form method="post">
+            {% csrf_token %}
+            {#show errors#}
+            {{ form.non_field_errors }}
+            <p>
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {{ form.username.errors }}
+            </p>
+            <p>
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                {{ form.password.errors }}
+            </p>
+            {#send to nect page#}
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit">Log in</button>
+        </form>
+    {% endif %}
+    </main>
+{% endblock %}

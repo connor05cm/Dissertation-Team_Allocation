@@ -1,0 +1,105 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f3f5f7;
+    color: #202b38;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.app-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 32px;
+}
+
+.login-panel,
+.courses-panel {
+    margin: 80px auto;
+    padding: 32px;
+    background: #fff;
+    border: 1px solid #d5dce3;
+    border-radius: 8px;
+}
+
+.login-panel {
+    width: 420px;
+}
+
+.courses-panel {
+    width: 800px;
+}
+
+.course-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.course-list li + li {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #d5dce3;
+}
+
+h1 {
+    margin: 0 0 24px;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+form p {
+    margin: 0 0 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input:not([type="hidden"]) {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #758393;
+    border-radius: 4px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+}
+
+button {
+    padding: 10px 20px;
+    border: 1px solid #174b7e;
+    border-radius: 4px;
+    background: #174b7e;
+    color: #fff;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #10385f;
+}
+
+input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid #2168af;
+    outline-offset: 3px;
+}
+
+.errorlist {
+    margin: 8px 0 20px;
+    padding-left: 20px;
+    color: #a01818;
+}
+
+input[aria-invalid="true"] {
+    border-color: #a01818;
+}
